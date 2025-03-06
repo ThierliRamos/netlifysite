@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificador de BIN</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column; /* Para empilhar os elementos verticalmente */
+            align-items: center; /* Centraliza os itens horizontalmente */
+            height: 100vh;
+            margin: 0;
+            background-image: url('/public/static/logo/ip.jpg'); /* Caminho da imagem */
+            background-size: cover; /* Faz a imagem cobrir todo o fundo */
+            background-position: center; /* Centraliza a imagem */
+            background-repeat: no-repeat; /* Impede a repetição da imagem */
+            font-family: Arial, sans-serif;
+        }
+
+        .back-button {
+            background-color: #6827a5e1; /* Cor verde */
+            color: white;   
+            margin-top: 100px;         
+            padding: 10px; /* Ajuste para combinar com o estilo dos outros botões */
+            border-radius: 5px;            
+            text-decoration: none; /* Remove sublinhado do link */            
+            font-size: 16px;            
+            margin-bottom: 15px; /* Espaçamento abaixo do botão */            
+            transition: background-color 0.3s;        
+            text-align: center; /* Centraliza o texto */
+            width: 165px; /* Largura fixa */
+        }        
+
+        .back-button:hover {            
+            background-color: #5300a1e1; /* Cor ao passar o mouse */        
+        }
+
+        .container {
+            background-color: white;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 300px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #6827a5e1;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #5300a1e1;
+        }
+
+        .result {
+            margin: 15px 0;
+            color: #333;
+            font-weight: bold;
+            text-align: left; /* Para alinhar à esquerda */
+            display: none; /* Inicialmente escondido */
+            width: 300px; /* Para manter a mesma largura do container */
+            background-color: white;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            margin-top: 20px; /* Espaço acima do resultado */
+        }
+
+        .error {
+            color: red;
+            display: none; /* Inicialmente escondido */
+        }
+    </style>
+</head>
+<body>
+    <div class="back-button-container">
+        <button class="back-button" onclick="location.href='/main.html';">Voltar para o Início</button>
+    </div>
+    <div class="container">
+        <h1>Consulta BIN</h1>
+        <div class="input-container">
+            <input type="text" id="bin" placeholder="Digite o BIN: 445566">
+        </div>
+        <button onclick="consultarBin()">Consultar BIN</button>
+    </div>
+
+    <div id="result" class="result"></div> <!-- Resultado abaixo do container -->
+    <div id="error" class="error"></div> 
+
+    <script>
+        async function consultarBin() {
+            const bin = document.getElementById('bin').value;
+            const resultDiv = document.getElementById('result');
+            const errorDiv = document.getElementById('error');
+
+            // Limpar resultados e erros anteriores
+            resultDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+            resultDiv.innerHTML = '';
+            errorDiv.innerHTML = '';
+
+            if (!bin) {
+                errorDiv.innerHTML = 'Por favor, insira um BIN.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            // URL da API do RapidAPI
+            const url = `https://bin-ip-checker.p.rapidapi.com/?bin=${bin}`;
+            const headers = {
+                "X-RapidAPI-Key": "99bb57d209mshb6ca809dc147a3ep1a51e7jsnf829ae92aef6",
+                "X-RapidAPI-Host": "bin-ip-checker.p.rapidapi.com",
+                "Content-Type": "application/json",
+            };
+
+            const payload = { bin: bin };
+
+            try {
+                // Realiza a requisição utilizando fetch
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: headers,
+                    body: JSON.stringify(payload),
+                });
+
+                const data = await response.json();
+                console.log(data);
+
+                if (data && data.BIN) {
+                    resultDiv.style.display = 'block';
+
+                    // Exibindo os dados de forma organizada
+                    resultDiv.innerHTML = `
+                        <h3>Resultado para BIN "${bin}":</h3>
+                        <p><strong>BIN Identificado:</strong> ${data.BIN.number}</p>
+                        <p><strong>Tipo:</strong> ${data.BIN.type}</p>
+                        <p><strong>Nível:</strong> ${data.BIN.level}</p>
+                        <p><strong>Bandeira:</strong> ${data.BIN.scheme}</p>
+                        <p><strong>Banco:</strong> ${data.BIN.issuer.name}</p>
+                        <p><strong>País:</strong> ${data.BIN.country.name}</p>
+                        <p><strong>Moeda:</strong> ${data.BIN.country.currency}</p>
+                        <p><strong>Capital:</strong> ${data.BIN.country.capital}</p>
+                    `;
+                } else {
+                    errorDiv.innerHTML = 'BIN não encontrada!';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.innerHTML = 'Erro ao buscar BIN!';
+                errorDiv.style.display = 'block';
+                console.error('Erro ao fazer a requisição:', error);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+[build]
+  publish = "templates"          # Diretório que contém o index.html e main.html
+  functions = "functions"     # Diretório das funções

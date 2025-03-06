@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baixar Vídeo do YouTube</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-image: url('/public/static/logo/youtube4.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 40px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 80%;
+            padding: 10px;
+            background-color: #6827a5e1;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #5300a1e1;
+        }
+        .back-button {
+            width: auto;
+            padding: 10px;
+            background-color: #6827a5e1;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto 20px auto;
+        }
+        .back-button:hover {
+            background-color: #5300a1e1;
+        }
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            color: #555;
+        }
+        .download-completed {
+            color: green;
+        }
+        .download-url {
+            margin-top: 10px;
+            color: blue;
+            word-break: break-all;
+        }
+        .video-info {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .video-info img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .format-select {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="location.href='/main.html';">Voltar para o Início</button>
+    <div class="container">
+        <h1>Baixar Vídeo do YouTube</h1>
+        <input type="text" id="url" placeholder="Cole a URL do vídeo aqui">
+        
+        <div class="format-select">
+            <h2>Escolha o Formato</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Formato</th>
+                        <th>Descrição</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="radio" name="format" value="mp3" checked> mp3</td>
+                        <td>Áudio em formato MP3</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" name="format" value="m4a"> m4a</td>
+                        <td>Áudio em formato M4A</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" name="format" value="webm"> webm</td>
+                        <td>Áudio em formato WebM</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" name="format" value="aac"> aac</td>
+                        <td>Áudio em formato AAC</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" name="format" value="flac"> flac</td>
+                        <td>Áudio em formato FLAC</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" name="format" value="opus"> opus</td>
+                        <td>Áudio em formato Opus</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" name="format" value="ogg"> ogg</td>
+                        <td>Áudio em formato OGG</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" name="format" value="vorbis"> vorbis</td>
+                        <td>Áudio em formato Vorbis</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" name="format" value="wav"> wav</td>
+                        <td>Áudio em formato WAV</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" name="format" value="360"> 360p</td>
+                        <td>Vídeo em 360p</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" name="format" value="480"> 480p</td>
+                        <td>Vídeo em 480p</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" name="format" value="720"> 720p</td>
+                        <td>Vídeo em 720p</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" name="format" value="1080"> 1080p</td>
+                        <td>Vídeo em 1080p</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" name="format" value="1440"> 1440p</td>
+                        <td>Vídeo em 1440p</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" name="format" value="4k"> 4K</td>
+                        <td>Vídeo em 4K</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <button id="download-btn">Baixar</button>
+        <div class="message" id="status-message" style="display:none;"></div>
+        <div class="download-url" id="download-url" style="display:none;"></div>
+        <div class="video-info" id="video-info" style="display:none;">
+            <h3 id="video-title"></h3>
+            <img id="video-image" src="" alt="Thumbnail do vídeo">
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('download-btn').addEventListener('click', function() {
+            const url = document.getElementById('url').value;
+            const format = document.querySelector('input[name="format"]:checked').value;
+            const statusMessage = document.getElementById('status-message');
+            const downloadUrlDiv = document.getElementById('download-url');
+            const videoInfoDiv = document.getElementById('video-info');
+            const videoTitle = document.getElementById('video-title');
+            const videoImage = document.getElementById('video-image');
+
+            statusMessage.textContent = 'Processando...';
+            statusMessage.style.display = 'block';
+            downloadUrlDiv.style.display = 'none';
+            videoInfoDiv.style.display = 'none';
+
+            // Codificar a URL do vídeo
+            const encodedUrl = encodeURIComponent(url);
+
+            // Criar a requisição
+            const xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+
+            xhr.addEventListener('readystatechange', function () {
+                if (this.readyState === this.DONE) {
+                    const response = JSON.parse(this.responseText);
+                    if (response.success) {
+                        // Mostrar a URL de download
+                        downloadUrlDiv.innerHTML = `
+                            <a href="${response.content}" download>Baixar Áudio</a>
+                        `;
+                        downloadUrlDiv.style.display = 'block';
+                        statusMessage.textContent = 'Download disponível!';
+
+                        // Exibir informações do vídeo
+                        videoTitle.textContent = response.title;
+                        videoImage.src = response.info.image;
+                        videoInfoDiv.style.display = 'block';
+                    } else {
+                        statusMessage.textContent = 'Erro: ' + (response.message || 'Não foi possível recuperar o áudio.');
+                    }
+                }
+            });
+
+            xhr.open('GET', `http://localhost:3000/api/download?format=${format}&url=${encodedUrl}&audio_quality=128`);
+        });
+    </script>
+</body>
+</html>
